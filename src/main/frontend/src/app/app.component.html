@@ -1,3 +1,11 @@
-<h1>
-  {{title}}
-</h1>
+<div>
+  <h1>
+    {{title}}
+  </h1>
+
+  <button (click)="getUsers()">Load users</button>
+
+  <ul *ngIf="users">
+    <li *ngFor="let user of users">{{user.username}}</li>
+  </ul>
+</div>
