@@ -7,19 +7,47 @@ import {Http} from "@angular/http";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+    title: string = "Crazy Charlie's House of Deals";
+    products = [];
+    total;
+    showTotal: boolean;
 
-  users = [];
+    constructor(private http: Http) {
+        this.getProducts();
+        this.showTotal = false;
+    }
 
-  constructor(private http: Http) {
-  }
+    buy(productId: string) {
+        this.showTotal = false;
+        this.http.get('/api/cart/buy/' + productId).subscribe(next => {
+                this.total = next.json();
+            })
+    }
 
-  getUsers() {
-    console.log('getUsers');
+    unbuy(productId: string) {
+        this.showTotal = false;
+        this.http.get('/api/cart/unbuy/' + productId).subscribe(next => {
+                this.total = next.json();
+            })
+    }
 
-    this.http.get('api/users').subscribe(next => {
-      console.log(next);
-      this.users = next.json();
-    })
-  }
+    getTotal() {
+        this.showTotal = true;
+        this.http.get('/api/cart/total/').subscribe(next => {
+                this.total = next.json();
+            })
+    }
+
+    getProducts() {
+        console.log('getProducts');
+        this.http.get('/api/products').subscribe(next => {
+                console.log(next);
+                this.products = next.json();
+            })
+            }
+
+    prettyPrice(price: number): string {
+        price /= 100;
+        return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR'});
+    }
 }
